@@ -114,8 +114,8 @@ static CGFloat const kDateInputViewSpacing = 1.0f;
 
     [dayComps setDay:1];
     
-    NSLog(@"firstWeekDay: %d", [_calendar firstWeekday]);
-    NSLog(@"weekday: %d", [[_calendar components:NSWeekdayCalendarUnit fromDate:date] weekday]);
+    NSLog(@"firstWeekDay: %lu", (unsigned long)[_calendar firstWeekday]);
+    NSLog(@"weekday: %ld", (long)[[_calendar components:NSWeekdayCalendarUnit fromDate:date] weekday]);
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"ccc"];
