@@ -8,6 +8,8 @@
 
 #import "TMDateInputView.h"
 
+#import "NSDate+TMDateInputView.h"
+
 @interface TMDateInputView ()
 - (void)setMonth:(NSDate *)month;
 - (void)setupWeekdayLabelsInView:(UIView *)view;
@@ -17,11 +19,12 @@
 @implementation TMDateInputView {
     NSCalendar *_calendar;
     NSDate *_month;
+    NSArray *_dayButtons;
 }
 
-static CGFloat const kDateInputViewMonthLabelHeight = 33.0f;
+static CGFloat const kDateInputViewMonthLabelHeight = 32.0f;
 static CGFloat const kDateInputViewWeekdayLabelHeight = 22.0f;
-static CGFloat const kDateInputViewDayCellHeight = 33.0f;
+static CGFloat const kDateInputViewDayCellHeight = 32.0f;
 static CGFloat const kDateInputViewSpacing = 1.0f;
 
 + (CGFloat)preferredHeight
@@ -74,6 +77,20 @@ static CGFloat const kDateInputViewSpacing = 1.0f;
             view.backgroundColor = [UIColor whiteColor];
         }
         
+        NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:31];
+        for (int i = 0; i < 31; i++) {
+            UIButton *button  = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.bounds = CGRectMake(0.0f, 0.0f, kDateInputViewDayCellHeight, kDateInputViewDayCellHeight);
+            button.titleLabel.textAlignment = NSTextAlignmentCenter;
+            [button setTitle:[NSString stringWithFormat:@"%d", i+1] forState:UIControlStateNormal];
+
+            [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+            
+            [buttons addObject:button];
+            [contentView addSubview:button];
+        }
+        _dayButtons = buttons;
+        
         _calendar = [NSCalendar currentCalendar];
         
         [self setupWeekdayLabelsInView:weekdayLabelView];
@@ -98,6 +115,68 @@ static CGFloat const kDateInputViewSpacing = 1.0f;
 - (void)updateDisplay
 {
     NSLog(@"updating for %@", _month);
+    NSRange dateRange = [_calendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:_month];
+    NSLog(@"  (days %d to %d)", dateRange.location, dateRange.length);
+    
+    NSDateComponents *comps = [_calendar components:NSMonthCalendarUnit|NSYearCalendarUnit|NSTimeZoneCalendarUnit fromDate:_month];
+    [comps setDay:dateRange.location];
+    NSDate *date = [_calendar dateFromComponents:comps];
+    
+    // find position of first button in grid
+    comps = [_calendar components:NSWeekdayCalendarUnit fromDate:date];
+    NSInteger weekday = [comps weekday];
+    NSInteger x = weekday - [_calendar firstWeekday];
+    if (x < 0) { x+= 7; }
+    NSInteger y = 0;
+    
+    // calculate widths and heights etc
+    CGFloat avaiableWidth = CGRectGetWidth(((UIButton *)_dayButtons[0]).superview.bounds);
+    CGFloat width = floorf(avaiableWidth / 7);
+    CGFloat height = kDateInputViewDayCellHeight;
+    
+    CGPoint offset;
+    offset.x = ((avaiableWidth - width * 7) + width) / 2.0f;
+    offset.y = height / 2.0f;
+    
+    NSLog(@"offset %@, width %f, height %f", NSStringFromCGPoint(offset), width, height);
+
+    // loop through buttons and show/hide and reposition them
+    NSUInteger firstVisibleButtonIndex = dateRange.location - 1;
+    NSUInteger lastVisibleButtonIndex = firstVisibleButtonIndex + dateRange.length - 1;
+    NSDateComponents *oneDayComponents = [[NSDateComponents alloc] init];
+    [oneDayComponents setDay:1];
+    for (NSUInteger i = 0; i < [_dayButtons count]; i++)
+    {
+        UIButton *button = (UIButton *)_dayButtons[i];
+        if (i < firstVisibleButtonIndex || i > lastVisibleButtonIndex) {
+            button.alpha = 0.0f;
+            NSLog(@"hiding %d", i);
+            continue;
+        }
+        
+        button.alpha = 1.0;
+        button.bounds = CGRectMake(0.0f, 0.0f, width, height);
+        button.center = CGPointMake(offset.x + x * width, offset.y + y * height);
+        
+        // adjust text color and background
+        NSLog(@"%@", self.tintColor);
+        UIColor *color = [date isToday] ? self.tintColor : [UIColor darkTextColor];
+        if ([date isSameDayAs:_date]) {
+            // background and inverted text color
+            button.backgroundColor = color;
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        } else {
+            button.backgroundColor = [UIColor clearColor];
+            [button setTitleColor:color forState:UIControlStateNormal];
+        }
+        
+        x++;
+        if (x > 6) {
+            x = 0;
+            y++;
+        }
+        date = [_calendar dateByAddingComponents:oneDayComponents toDate:date options:0];
+    }
 }
 
 - (void)setupWeekdayLabelsInView:(UIView *)parentView

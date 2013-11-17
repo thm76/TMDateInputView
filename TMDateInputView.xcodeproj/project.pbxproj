@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C34C6CD11838DFF400115743 /* NSDate+TMDateInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C34C6CD01838DFF400115743 /* NSDate+TMDateInputView.m */; };
 		C39531A61834ED5F00AFC082 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C39531A51834ED5F00AFC082 /* Foundation.framework */; };
 		C39531AB1834ED5F00AFC082 /* TMDateInputView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C39531AA1834ED5F00AFC082 /* TMDateInputView.h */; };
 		C39531AD1834ED5F00AFC082 /* TMDateInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C39531AC1834ED5F00AFC082 /* TMDateInputView.m */; };
@@ -42,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C34C6CCF1838DFF400115743 /* NSDate+TMDateInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TMDateInputView.h"; sourceTree = "<group>"; };
+		C34C6CD01838DFF400115743 /* NSDate+TMDateInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TMDateInputView.m"; sourceTree = "<group>"; };
 		C39531A21834ED5F00AFC082 /* libTMDateInputView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTMDateInputView.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C39531A51834ED5F00AFC082 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C39531A91834ED5F00AFC082 /* TMDateInputView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TMDateInputView-Prefix.pch"; sourceTree = "<group>"; };
@@ -113,6 +116,8 @@
 				C39531AA1834ED5F00AFC082 /* TMDateInputView.h */,
 				C39531AC1834ED5F00AFC082 /* TMDateInputView.m */,
 				C39531A81834ED5F00AFC082 /* Supporting Files */,
+				C34C6CCF1838DFF400115743 /* NSDate+TMDateInputView.h */,
+				C34C6CD01838DFF400115743 /* NSDate+TMDateInputView.m */,
 			);
 			path = TMDateInputView;
 			sourceTree = "<group>";
@@ -225,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C39531AD1834ED5F00AFC082 /* TMDateInputView.m in Sources */,
+				C34C6CD11838DFF400115743 /* NSDate+TMDateInputView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
